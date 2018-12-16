@@ -7,6 +7,7 @@ const errorHandler = require("./handlers/error");
 const authRoutes = require("./routes/auth");
 const messagesRoutes = require("./routes/messages");
 const {loginRequired, ensureCorrectUser} = require("./middleware/auth");
+const db = require("./models");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -16,7 +17,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users/:id/messages", loginRequired, ensureCorrectUser, messagesRoutes);
 app.use("/api/messages", loginRequired, async function(req, res, next){
     try{
-        let messages = db.Message.find().sort({createdAt: "desc"}).populate("user", {
+        console.log("run");
+        let messages = await db.Message.find().sort({createdAt: "desc"}).populate("user", {
             username: true,
             profileImageUrl: true
         })
